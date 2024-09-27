@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carpool & Bikepool</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e90ff 0%, #ff6347 100%);
+            padding: 20px;
+            color: #fff;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .nav1{
+            list-style-type: none;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 20px;
+
+        }
+
+
+
+        .nav1 li a{
+            color: aliceblue;
+            text-decoration: none;
+        }
+
+        .nav1 a:hover{
+            text-decoration: underline;
+        }
+
+        .form-section {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .form-section h2 {
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .plan-selection {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .plan {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            width: 200px;
+        }
+
+        .plan:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .plan.selected {
+            background-color: #1e90ff;
+            color: #fff;
+            border: 1px solid #1e90ff;
+        }
+
+        .plan h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .plan p {
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+        #map {
+            height: 400px;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Carpool & Bikepool</h1>
+            <nav>
+                <ul class="nav1">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="host 3.html">Host Registration</a></li>
+                    <li><a href="cotraveler.html">Co-Traveler Registration</a></li>
+                    <li><a href="map 6.html">Subscription</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="container">
+        <div class="form-section">
+                <h1>Choose Your Subscription</h1>
+                
+            
+            <div class="plan-selection">
+                <div class="plan" data-value="below_10km" data-price="5">
+                    <h3>Below 10km</h3>
+                    <p>Rs.1000</p>
+                    <p>For short trips within 10km.</p>
+                </div>
+                <div class="plan" data-value="below_20km" data-price="10">
+                    <h3>Below 20km</h3>
+                    <p>Rs.2000</p>
+                    <p>For medium trips within 20km.</p>
+                </div>
+                <div class="plan" data-value="below_30km" data-price="15">
+                    <h3>Below 30km</h3>
+                    <p>Rs.3000</p>
+                    <p>For trips within 30km.</p>
+                </div>
+                <div class="plan" data-value="below_40km" data-price="20">
+                    <h3>Below 40km</h3>
+                    <p>Rs.4000</p>
+                    <p>For longer trips within 40km.</p>
+                </div>
+            </div>
+            <div id="map"></div>
+            <div id="result" style="text-align: center; margin-top: 20px; font-size: 1.2rem;"></div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Carpool & Bikepool. All rights reserved.</p>
+    </footer>
+
+    <!-- Include Leaflet.js and Leaflet Routing Machine -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script>
+        var map = L.map('map').setView([13.0827, 80.2707], 13); // Centered on Chennai
+        var startMarker, endMarker;
+        var control = L.Routing.control({
+            waypoints: [],
+            routeWhileDragging: true,
+            geocoder: L.Control.Geocoder.nominatim(),
+            createMarker: function() { return null; } // Disable default marker creation
+        }).addTo(map);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        map.on('click', function(e) {
+            if (!startMarker) {
+                startMarker = L.marker(e.latlng, {draggable: true}).addTo(map)
+                    .bindPopup('Start Location')
+                    .openPopup()
+                    .on('dragend', updateRoute);
+            } else if (!endMarker) {
+                endMarker = L.marker(e.latlng, {draggable: true}).addTo(map)
+                    .bindPopup('Drop Location')
+                    .openPopup()
+                    .on('dragend', updateRoute);
+                updateRoute();
+            } else {
+                startMarker.setLatLng(e.latlng).bindPopup('Start Location').openPopup();
+                endMarker.setLatLng(null);
+                endMarker = null;
+                updateRoute();
+            }
+        });
+
+        function updateRoute() {
+            if (startMarker && endMarker) {
+                control.setWaypoints([startMarker.getLatLng(), endMarker.getLatLng()]);
+                var distance = map.distance(startMarker.getLatLng(), endMarker.getLatLng()) / 1000; // in kilometers
+                var subscription;
+                var price;
+                if (distance <= 10) {
+                    subscription = "Below 10km";
+                    price = 1000;
+                } else if (distance <= 20) {
+                    subscription = "Below 20km";
+                    price = 2000;
+                } else if (distance <= 30) {
+                    subscription = "Below 30km";
+                    price = 3000;
+                } else if (distance <= 40) {
+                    subscription = "Below 40km";
+                    price = 4000;
+                } else {
+                    subscription = "Above 40km";
+                    price = "N/A";
+                }
+                document.getElementById('result').innerHTML = `Distance: ${distance.toFixed(2)} km. <br> Recommended Subscription: <strong>${subscription}</strong><br> Price: $${price}`;
+                
+                // Add event listener to all plans
+                document.querySelectorAll('.plan').forEach(function(plan) {
+                    plan.addEventListener('click', function() {
+                        var selectedPlan = this.getAttribute('data-value');
+                        var selectedPrice = this.getAttribute('data-price');
+                        window.location.href = `payment.html?subscription=${selectedPlan}&price=${selectedPrice}`;
+                    });
+                });
+            }
+        }
+    </script>
+</body>
+</html>
