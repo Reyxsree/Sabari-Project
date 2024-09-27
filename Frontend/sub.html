@@ -19,24 +19,74 @@
             color: #333;
         }
 
+
         header {
-            background-color: #1e90ff;
+            background: #333;
             color: #fff;
             padding: 20px 0;
-            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-
-        .container {
+        .header-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .site-title {
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        .main-nav ul li {
+            margin-left: 20px;
+        }
+
+        .main-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            padding-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover {
+            color: #cce7ff;
+        }
+
+        .main-nav a::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #cce7ff;
+            transition: width 0.3s ease;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .main-nav a:hover::after {
+            width: 100%;
         }
 
         .plans {
@@ -108,26 +158,58 @@
             background-color: #ff6347;
         }
 
-        .footer {
-            background-color: #333;
+        footer {
+            background: #333;
             color: #fff;
             padding: 20px 0;
             text-align: center;
-            margin-top: 50px;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .footer p {
-            margin: 0;
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .main-nav ul {
+                flex-direction: column;
+                margin-top: 10px;
+            }
+
+            .main-nav ul li {
+                margin: 10px 0;
+            }
+
+            .form-section {
+                padding: 30px 15px;
+                margin-top: 80px;
+            }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="container">
-            <h1>Choose Your Subscription Plan</h1>
+        <div class="header-container">
+            <h1 class="site-title">Carpool & Bikepool</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="host 3.html">Host</a></li>
+                    <li><a href="cotraveler.html" class="active">Co-Traveler </a></li>
+                    <li><a href="map 6.html">Subscription</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
+
 
     <div class="container">
         <div class="plans">
@@ -167,8 +249,8 @@
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="container">
+    <footer>
+        <div class="footer-container">
             <p>&copy; 2024 Carpool & Bikepool. All rights reserved.</p>
         </div>
     </footer>

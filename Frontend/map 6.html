@@ -21,45 +21,42 @@
             background: #333;
             color: #fff;
             padding: 20px 0;
-            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-        }
-
-        .container {
+        .header-container {
             max-width: 1200px;
-            margin: 20px auto;
+            margin: 0 auto;
             padding: 0 20px;
             display: flex;
-            flex-direction: row;
             justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
-        .main-nav{
-            margin: 20px;
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
-            
+        .site-title {
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin: 0;
         }
-        
+
         .main-nav ul {
+            list-style: none;
             padding: 0;
             margin: 0;
             display: flex;
-            list-style-type: none;
         }
 
         .main-nav ul li {
             margin-left: 20px;
-            list-style-type: none;
         }
 
         .main-nav a {
-            
             color: #ffffff;
             text-decoration: none;
             font-weight: 600;
@@ -90,6 +87,7 @@
         }
 
         .form-section {
+            margin-top: 50px;
             background-color: #fff;
             padding: 40px;
             border-radius: 10px;
@@ -115,7 +113,7 @@
             border: 1px solid #ddd;
             border-radius: 10px;
             padding: 20px;
-            margin: 10px;
+            margin: 30px;
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: center;
@@ -154,29 +152,52 @@
             color: #fff;
             padding: 20px 0;
             text-align: center;
-            margin-top: 50px;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        footer p {
-            margin: 0;
-            font-size: 1rem;
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .main-nav ul {
+                flex-direction: column;
+                margin-top: 10px;
+            }
+
+            .main-nav ul li {
+                margin: 10px 0;
+            }
+
+            .form-section {
+                padding: 30px 15px;
+                margin-top: 80px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="container">
-            <h1>Carpool & Bikepool</h1>
+        <div class="header-container">
+            <h1 class="site-title">Carpool & Bikepool</h1>
             <nav class="main-nav">
                 <ul>
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="host 3.html">Host Registration</a></li>
-                    <li><a href="cotraveler.html">Co-Traveler Registration</a></li>
+                    <li><a href="host 3.html">Host</a></li>
+                    <li><a href="cotraveler.html" class="active">Co-Traveler </a></li>
                     <li><a href="map 6.html">Subscription</a></li>
                 </ul>
             </nav>
         </div>
     </header>
+
 
     <section class="container">
         <div class="form-section">
@@ -211,7 +232,9 @@
     </section>
 
     <footer>
-        <p>&copy; 2024 Carpool & Bikepool. All rights reserved.</p>
+        <div class="footer-container">
+            <p>&copy; 2024 Carpool & Bikepool. All rights reserved.</p>
+        </div>
     </footer>
 
     <!-- Include Leaflet.js and Leaflet Routing Machine -->
